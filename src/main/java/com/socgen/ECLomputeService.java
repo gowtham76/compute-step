@@ -10,15 +10,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 @Service
-public class ComputeService {
+public class ECLomputeService {
 
-    private static final Logger log = LoggerFactory.getLogger(ComputeService.class);
+    private static final Logger log = LoggerFactory.getLogger(RWAComputeService.class);
 
     private final AssemblyExecutor executor;
 
     private final ExecutorService threadPool = Executors.newFixedThreadPool(5);
 
-    public ComputeService(AssemblyExecutor executor) {
+    public ECLomputeService(AssemblyExecutor executor) {
         this.executor = executor;
     }
 
@@ -30,19 +30,19 @@ public class ComputeService {
             log.info("Type processing started runId={} type={}", runId, type);
 
             Future<?> f1 = threadPool.submit(() ->
-                    runWithContext(runId, type, "S210_updateBalance", () -> simulateWork(400))
+                    runWithContext(runId, type, "S410_updateBalance", () -> simulateWork(400))
             );
 
             Future<?> f2 = threadPool.submit(() ->
-                    runWithContext(runId, type, "S320_updateMaturity", () -> simulateWork(800))
+                    runWithContext(runId, type, "S420_updateMaturity", () -> simulateWork(800))
             );
 
             Future<?> f3 = threadPool.submit(() ->
-                    runWithContext(runId, type, "S309_updateCounterparty", () -> simulateWork(300))
+                    runWithContext(runId, type, "S430_updateCounterparty", () -> simulateWork(300))
             );
 
             Future<?> f4 = threadPool.submit(() ->
-                    runWithContext(runId, type, "S350_updateCcpTransaction", () -> simulateWork(600))
+                    runWithContext(runId, type, "S450_updateCcpTransaction", () -> simulateWork(600))
             );
 
             f1.get();

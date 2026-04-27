@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: compute-step
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: compute-step
+  template:
+    metadata:
+      labels:
+        app: compute-step
+    spec:
+      containers:
+        - name: compute-step
+          image: gowtham76/compute-step:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8091
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: compute-step-service
+spec:
+  type: NodePort
+  selector:
+    app: compute-step
+  ports:
+    - port: 80
+      targetPort: 8091
+      nodePort: 30007

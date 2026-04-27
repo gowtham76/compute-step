@@ -1,8 +1,8 @@
 package com.socgen;
 
-import com.socgen.ComputeService;
 import org.slf4j.MDC;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -10,14 +10,18 @@ import java.util.UUID;
 @RestController
 public class JobController {
 
-    private final ComputeService computeService;
+    private final RWAComputeService rwaComputeService;
+    private final ECLomputeService ecLomputeService;
+    private final LTVComputeService ltvComputeService;
 
-    public JobController(ComputeService computeService) {
-        this.computeService = computeService;
+    public JobController(RWAComputeService rwaComputeService, ECLomputeService ecLomputeService, LTVComputeService ltvComputeService) {
+        this.rwaComputeService = rwaComputeService;
+        this.ecLomputeService = ecLomputeService;
+        this.ltvComputeService = ltvComputeService;
     }
 
-    @GetMapping("/run")
-    public String runJob() {
+    @GetMapping("/run/{runType}")
+    public String runJob(@PathVariable String runType) {
 
         // ✅ Generate unique runId
         String runId = UUID.randomUUID().toString();
@@ -27,9 +31,22 @@ public class JobController {
             MDC.put("runId", runId);
             MDC.put("service", "compute-step");
 
-            computeService.processType(runId, "RWA");
-            computeService.processType(runId, "ECL");
-            computeService.processType(runId, "LTV");
+            switch (runType.toUpperCase()) {
+
+                case "RWA":
+                    rwaComputeService.processType(runId, "RWA");
+                    break;
+
+                case "ECL":
+                    ecLomputeService.processType(runId, "ECL");
+                    break;
+
+                case "LTV":
+                    ltvComputeService.processType(runId, "LTV");
+
+                default:
+                    return "❌ Invalid runType. Allowed: RWA, ECL, LTV, ALL";
+            }
 
             return "✅ Job completed. runId=" + runId;
 
