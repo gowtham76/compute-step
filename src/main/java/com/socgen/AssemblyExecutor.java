@@ -8,20 +8,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssemblyExecutor {
 
-    private static final Logger log = LoggerFactory.getLogger(AssemblyExecutor.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(AssemblyExecutor.class);
 
-    public void execute(String type, String assemblyName, Runnable logic) {
+    public void execute(String type,
+                        String assemblyName,
+                        Runnable logic) {
 
         long startTime = System.currentTimeMillis();
 
         try {
-            // ✅ Set MDC directly
+
+            // MDC context
             MDC.put("type", type);
             MDC.put("assembly", assemblyName);
+            MDC.put("thread", Thread.currentThread().getName());
 
-            log.info("Assembly started");
+            log.info(
+                    "ASSEMBLY_STARTED runId={} type={} assembly={} thread={}",
+                    MDC.get("runId"),
+                    type,
+                    assemblyName,
+                    Thread.currentThread().getName()
+            );
 
-            // Execute actual logic
+            // Execute actual assembly logic
             logic.run();
 
             long duration = System.currentTimeMillis() - startTime;
@@ -29,7 +40,15 @@ public class AssemblyExecutor {
             MDC.put("duration_ms", String.valueOf(duration));
             MDC.put("status", "SUCCESS");
 
-            log.info("Assembly completed");
+            log.info(
+                    "ASSEMBLY_COMPLETED runId={} type={} assembly={} duration_ms={} status={} thread={}",
+                    MDC.get("runId"),
+                    type,
+                    assemblyName,
+                    duration,
+                    "SUCCESS",
+                    Thread.currentThread().getName()
+            );
 
         } catch (Exception e) {
 
@@ -38,16 +57,29 @@ public class AssemblyExecutor {
             MDC.put("duration_ms", String.valueOf(duration));
             MDC.put("status", "FAILED");
 
-            log.error("Assembly failed", e);
+            log.error(
+                    "ASSEMBLY_FAILED runId={} type={} assembly={} duration_ms={} status={} thread={}",
+                    MDC.get("runId"),
+                    type,
+                    assemblyName,
+                    duration,
+                    "FAILED",
+                    Thread.currentThread().getName(),
+                    e
+            );
 
             throw e;
 
         } finally {
-            // ✅ Clean only what this class added
+
+            // Cleanup only assembly-level MDC values
             MDC.remove("assembly");
             MDC.remove("duration_ms");
             MDC.remove("status");
-            // ❗ DO NOT remove runId/type if set at higher level unless needed
+            MDC.remove("thread");
+
+            // DO NOT remove runId/type here
+            // because parent execution flow may still need them
         }
     }
 }
