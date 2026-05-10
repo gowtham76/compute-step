@@ -6,7 +6,6 @@
               class="ch.qos.logback.core.ConsoleAppender">
 
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-
             <includeMdc>true</includeMdc>
 
             <customFields>
