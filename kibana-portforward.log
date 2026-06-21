@@ -1,9 +1,61 @@
-nohup: ignoring input
-Unable to listen on port 5602: Listeners failed to cHandling connection for 5601
+Forwarding from 127.0.0.1:5601 -> 5601
+Forwarding from [::1]:5601 -> 5601
 Handling connection for 5601
 Handling connection for 5601
 Handling connection for 5601
 Handling connection for 5601
 Handling connection for 5601
-:5602: bind: address already in use]
-error: unable to listen on any of the requested ports: [{5602 5601}]
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+E0621 07:16:49.997499    6988 portforward.go:391] "Unhandled Error" err="error copying from remote stream to local connection: readfrom tcp6 [::1]:5601->[::1]:48888: write tcp6 [::1]:5601->[::1]:48888: write: broken pipe"
+Handling connection for 5601
+E0621 07:20:44.291659    6988 portforward.go:391] "Unhandled Error" err="error copying from remote stream to local connection: readfrom tcp6 [::1]:5601->[::1]:58038: write tcp6 [::1]:5601->[::1]:58038: write: broken pipe"
+Handling connection for 5601
+E0621 07:20:53.482679    6988 portforward.go:391] "Unhandled Error" err="error copying from remote stream to local connection: readfrom tcp6 [::1]:5601->[::1]:48902: write tcp6 [::1]:5601->[::1]:48902: write: broken pipe"
+Handling connection for 5601
+E0621 07:20:57.049533    6988 portforward.go:391] "Unhandled Error" err="error copying from remote stream to local connection: readfrom tcp6 [::1]:5601->[::1]:38026: write tcp6 [::1]:5601->[::1]:38026: write: broken pipe"
+Handling connection for 5601
+Handling connection for 5601
+E0621 07:22:44.441831    6988 portforward.go:391] "Unhandled Error" err="error copying from remote stream to local connection: readfrom tcp6 [::1]:5601->[::1]:33580: write tcp6 [::1]:5601->[::1]:33580: write: broken pipe"
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
+Handling connection for 5601
