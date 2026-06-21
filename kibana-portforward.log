@@ -1,21 +1,9 @@
-Forwarding from 127.0.0.1:5601 -> 5601
-Forwarding from [::1]:5601 -> 5601
+nohup: ignoring input
+Unable to listen on port 5602: Listeners failed to cHandling connection for 5601
 Handling connection for 5601
 Handling connection for 5601
 Handling connection for 5601
 Handling connection for 5601
 Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
-Handling connection for 5601
+:5602: bind: address already in use]
+error: unable to listen on any of the requested ports: [{5602 5601}]

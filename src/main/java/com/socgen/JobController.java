@@ -19,7 +19,10 @@ public class JobController {
     private final ECLomputeService ecLomputeService;
     private final LTVComputeService ltvComputeService;
 
-    public JobController(RWAComputeService rwaComputeService, ECLomputeService ecLomputeService, LTVComputeService ltvComputeService) {
+    public JobController(RWAComputeService rwaComputeService,
+                         ECLomputeService ecLomputeService,
+                         LTVComputeService ltvComputeService) {
+
         this.rwaComputeService = rwaComputeService;
         this.ecLomputeService = ecLomputeService;
         this.ltvComputeService = ltvComputeService;
@@ -36,13 +39,11 @@ public class JobController {
 
             MDC.put("runId", runId);
             MDC.put("service", "compute-step");
+            MDC.put("run_type", runType.toUpperCase());
 
-            log.info(
-                    "RUN_STARTED runId={} runType={} service={}",
-                    runId,
-                    runType,
-                    "compute-step"
-            );
+            MDC.put("event", "RUN_STARTED");
+
+            log.info("RUN_STARTED");
 
             switch (runType.toUpperCase()) {
 
@@ -59,35 +60,42 @@ public class JobController {
                     break;
 
                 default:
+
+                    MDC.put("event", "RUN_INVALID");
+
+                    log.error("RUN_INVALID");
+
                     return "❌ Invalid runType";
             }
 
-            long duration = System.currentTimeMillis() - startTime;
+            long duration =
+                    System.currentTimeMillis() - startTime;
 
-            log.info(
-                    "RUN_COMPLETED runId={} runType={} duration_ms={} status=SUCCESS",
-                    runId,
-                    runType,
-                    duration
-            );
+            MDC.put("event", "RUN_COMPLETED");
+            MDC.put("duration_ms",
+                    String.valueOf(duration));
+            MDC.put("status", "SUCCESS");
+
+            log.info("RUN_COMPLETED");
 
             return "✅ Job completed. runId=" + runId;
 
         } catch (Exception e) {
 
-            long duration = System.currentTimeMillis() - startTime;
+            long duration =
+                    System.currentTimeMillis() - startTime;
 
-            log.error(
-                    "RUN_FAILED runId={} runType={} duration_ms={} status=FAILED",
-                    runId,
-                    runType,
-                    duration,
-                    e
-            );
+            MDC.put("event", "RUN_FAILED");
+            MDC.put("duration_ms",
+                    String.valueOf(duration));
+            MDC.put("status", "FAILED");
+
+            log.error("RUN_FAILED", e);
 
             throw e;
 
         } finally {
+
             MDC.clear();
         }
     }

@@ -1,0 +1,33 @@
+RUN_STARTED
+runId=6b740161...
+
+    TYPE_STARTED
+    type=RWA
+
+        ASSEMBLY_STARTED
+        assembly=S210_updateBalance
+
+        ASSEMBLY_STARTED
+        assembly=S320_updateMaturity
+
+        ASSEMBLY_STARTED
+        assembly=S309_updateCounterparty
+
+        ASSEMBLY_STARTED
+        assembly=S350_updateCcpTransaction
+
+        ASSEMBLY_COMPLETED
+        assembly=S309_updateCounterparty
+
+        ASSEMBLY_COMPLETED
+        assembly=S210_updateBalance
+
+        ASSEMBLY_COMPLETED
+        assembly=S350_updateCcpTransaction
+
+        ASSEMBLY_COMPLETED
+        assembly=S320_updateMaturity
+
+    TYPE_COMPLETED
+
+RUN_COMPLETED

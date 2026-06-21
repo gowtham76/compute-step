@@ -19,67 +19,48 @@ public class AssemblyExecutor {
 
         try {
 
-            // MDC context
+            // Structured MDC fields
+            MDC.put("event", "ASSEMBLY_STARTED");
             MDC.put("type", type);
             MDC.put("assembly", assemblyName);
             MDC.put("thread", Thread.currentThread().getName());
 
-            log.info(
-                    "ASSEMBLY_STARTED runId={} type={} assembly={} thread={}",
-                    MDC.get("runId"),
-                    type,
-                    assemblyName,
-                    Thread.currentThread().getName()
-            );
+            // Clean searchable log
+            log.info("ASSEMBLY_STARTED");
 
-            // Execute actual assembly logic
+            // Execute actual logic
             logic.run();
 
             long duration = System.currentTimeMillis() - startTime;
 
+            MDC.put("event", "ASSEMBLY_COMPLETED");
             MDC.put("duration_ms", String.valueOf(duration));
             MDC.put("status", "SUCCESS");
 
-            log.info(
-                    "ASSEMBLY_COMPLETED runId={} type={} assembly={} duration_ms={} status={} thread={}",
-                    MDC.get("runId"),
-                    type,
-                    assemblyName,
-                    duration,
-                    "SUCCESS",
-                    Thread.currentThread().getName()
-            );
+            log.info("ASSEMBLY_COMPLETED");
 
         } catch (Exception e) {
 
             long duration = System.currentTimeMillis() - startTime;
 
+            MDC.put("event", "ASSEMBLY_FAILED");
             MDC.put("duration_ms", String.valueOf(duration));
             MDC.put("status", "FAILED");
 
-            log.error(
-                    "ASSEMBLY_FAILED runId={} type={} assembly={} duration_ms={} status={} thread={}",
-                    MDC.get("runId"),
-                    type,
-                    assemblyName,
-                    duration,
-                    "FAILED",
-                    Thread.currentThread().getName(),
-                    e
-            );
+            log.error("ASSEMBLY_FAILED", e);
 
             throw e;
 
         } finally {
 
-            // Cleanup only assembly-level MDC values
+            // Cleanup assembly-level MDC
+            MDC.remove("event");
             MDC.remove("assembly");
             MDC.remove("duration_ms");
             MDC.remove("status");
             MDC.remove("thread");
 
-            // DO NOT remove runId/type here
-            // because parent execution flow may still need them
+            // Keep runId/type controlled by parent flow
         }
     }
 }

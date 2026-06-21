@@ -1,0 +1,74 @@
+No. Removing the pod field from the dashboard does not automatically take an average.
+
+It depends on the metric you selected.
+
+For example, suppose Elasticsearch has:
+
+runId	pod	duration
+R1	pod-1	400
+R1	pod-2	800
+R1	pod-3	300
+If Metric = Average(duration)
+
+Then removing pod gives:
+
+(400 + 800 + 300) / 3 = 500
+
+Kibana shows 500.
+
+If Metric = Maximum(duration)
+
+Then removing pod gives:
+
+max(400, 800, 300) = 800
+
+Kibana shows 800.
+
+If Metric = Count
+
+Then removing pod gives:
+
+3
+
+because there are 3 documents.
+
+If Metric = Unique Count(runId)
+
+Then removing pod gives:
+
+1
+
+because all rows belong to the same runId.
+
+In your dashboard
+
+You often use:
+
+median(duration_num)
+
+or
+
+unique_count(runId.keyword)
+
+So when you remove pod:
+
+median(duration_num) → median of all matching documents
+unique_count(runId.keyword) → distinct runIds
+count() → total documents
+max(duration_num) → highest duration
+
+Kibana never assumes "take average because pod was removed."
+
+The metric determines aggregation, not the dimensions you remove.
+
+A useful way to think about it:
+
+Rows/Breakdown fields (pod, run_type, assembly)
+      ↓
+split data into groups
+
+Metric (count, avg, max, median)
+      ↓
+calculation performed inside each group
+
+When you remove pod, Kibana simply combines those groups and recalculates using the metric you've chosen.

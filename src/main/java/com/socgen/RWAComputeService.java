@@ -32,12 +32,13 @@ public class RWAComputeService {
 
         try {
 
-            log.info(
-                    "TYPE_STARTED runId={} type={} totalAssemblies={}",
-                    runId,
-                    type,
-                    totalAssemblies
-            );
+            MDC.put("event", "TYPE_STARTED");
+            MDC.put("runId", runId);
+            MDC.put("type", type);
+            MDC.put("total_assemblies",
+                    String.valueOf(totalAssemblies));
+
+            log.info("TYPE_STARTED");
 
             Future<?> f1 = threadPool.submit(() ->
                     runWithContext(
@@ -53,7 +54,7 @@ public class RWAComputeService {
                             runId,
                             type,
                             "S320_updateMaturity",
-                            () -> simulateWork(800)
+                            () -> simulateWork(1200)
                     )
             );
 
@@ -62,7 +63,7 @@ public class RWAComputeService {
                             runId,
                             type,
                             "S309_updateCounterparty",
-                            () -> simulateWork(300)
+                            () -> simulateWork(500)
                     )
             );
 
@@ -71,7 +72,7 @@ public class RWAComputeService {
                             runId,
                             type,
                             "S350_updateCcpTransaction",
-                            () -> simulateWork(600)
+                            () -> simulateWork(1600)
                     )
             );
 
@@ -81,29 +82,36 @@ public class RWAComputeService {
             f3.get();
             f4.get();
 
-            long duration = System.currentTimeMillis() - startTime;
+            long duration =
+                    System.currentTimeMillis() - startTime;
 
-            log.info(
-                    "TYPE_COMPLETED runId={} type={} duration_ms={} status=SUCCESS totalAssemblies={}",
-                    runId,
-                    type,
-                    duration,
-                    totalAssemblies
-            );
+            MDC.put("event", "TYPE_COMPLETED");
+            MDC.put("duration_ms",
+                    String.valueOf(duration));
+            MDC.put("status", "SUCCESS");
+
+            log.info("TYPE_COMPLETED");
 
         } catch (Exception e) {
 
-            long duration = System.currentTimeMillis() - startTime;
+            long duration =
+                    System.currentTimeMillis() - startTime;
 
-            log.error(
-                    "TYPE_FAILED runId={} type={} duration_ms={} status=FAILED",
-                    runId,
-                    type,
-                    duration,
-                    e
-            );
+            MDC.put("event", "TYPE_FAILED");
+            MDC.put("duration_ms",
+                    String.valueOf(duration));
+            MDC.put("status", "FAILED");
+
+            log.error("TYPE_FAILED", e);
 
             throw new RuntimeException(e);
+
+        } finally {
+
+            MDC.remove("event");
+            MDC.remove("duration_ms");
+            MDC.remove("status");
+            MDC.remove("total_assemblies");
         }
     }
 
@@ -135,11 +143,11 @@ public class RWAComputeService {
 
             Thread.currentThread().interrupt();
 
-            log.error(
-                    "THREAD_INTERRUPTED thread={}",
-                    Thread.currentThread().getName(),
-                    e
-            );
+            MDC.put("event", "THREAD_INTERRUPTED");
+            MDC.put("thread",
+                    Thread.currentThread().getName());
+
+            log.error("THREAD_INTERRUPTED", e);
         }
     }
 }
